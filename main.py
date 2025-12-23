@@ -1,15 +1,36 @@
 import LLM
-ds=LLM.ds()
+import grammar
+
 if __name__=='__main__':
-    q=input('请问有什么要咨询的吗？')
-    ds.deepseekchat(q)
+    ds = LLM.ds()
+    dsl = grammar.CalligraphyDSL()
+    print("🎨 书法专业领域咨询系统")
+    print("支持以下查询类型：")
+    print("1. 查询书法家信息")
+    print("2. 查询作品信息")
+    print("3. 查询书体风格")
+    print("4. 查询朝代书家")
+    print("5. 简单查询")
+    print("输入'退出'或'quit'结束查询")
+    print("-" * 50)
+
     while True:
-        flag=input('请问还有其他问题吗？Y/N')
-        if flag=='N':
+        try:
+            query = input("请输入查询：").strip()
+            if query.lower() in ['退出', 'quit', 'exit']:
+                print("感谢使用书法咨询系统！")
+                break
+
+            if query.lower() in ['你好']:
+                print(ds.deepseekchat(query))
+
+            else:
+                result = dsl.parse(ds.deepseekchat(query))
+                print(f"{result}")
+                print("-" * 50)
+        except KeyboardInterrupt:
+            print("\n感谢使用书法咨询系统！")
             break
-        elif flag=='Y':
-            q=input('请问：')
-            ds.deepseekchat(q)
-        else:
-            print('syntax error')
+        except Exception as e:
+            print(f"系统错误：{e}")
 
