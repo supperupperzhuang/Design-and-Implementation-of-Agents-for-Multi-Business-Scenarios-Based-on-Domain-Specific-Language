@@ -73,33 +73,25 @@ class CalligraphyDSL:
             }
         }
 
-        # 定义词法单元 - 调整顺序确保关键词优先匹配
+        # 定义词法单元 - 简化令牌列表
         self.tokens = (
             'FIND', 'CALLIGRAPHER', 'WORK', 'STYLE', 'DYNASTY',
-            'REPRESENTATIVE', 'INFO', 'OF', 'CHINESE_NAME'
+            'INFO', 'CHINESE_NAME'
         )
 
         # 构建词法分析器和语法分析器
         self.lexer = lex.lex(module=self)
         self.parser = yacc.yacc(module=self, debug=False)
 
-    # 词法规则 - 调整匹配优先级
-    t_ignore = ' \t\r\n'
-
-    def t_FIND(self, t):
-        r'查询|查找|搜索|找|请问|我想知道|了解|显示|展示'
-        return t
+    # 词法规则 - 保持"的"字作为忽略字符
+    t_ignore = ' \t\r\n的'
 
     def t_CALLIGRAPHER(self, t):
         r'书法家|书家|书法大师|书法名家'
         return t
 
     def t_WORK(self, t):
-        r'作品|书法作品|著名作品|墨宝'
-        return t
-
-    def t_REPRESENTATIVE(self, t):
-        r'代表作'
+        r'作品|书法作品|著名作品|墨宝|代表作'
         return t
 
     def t_STYLE(self, t):
@@ -118,8 +110,8 @@ class CalligraphyDSL:
         r'信息'
         return t
 
-    def t_OF(self, t):
-        r'的'
+    def t_FIND(self, t):
+        r'查询|查找|搜索|找|请问|我想知道|了解|显示|展示'
         return t
 
     def t_CHINESE_NAME(self, t):
@@ -137,20 +129,16 @@ class CalligraphyDSL:
         # 对于无法识别的字符，跳过继续分析
         t.lexer.skip(1)
 
-    # 语法规则 - 修复优先级和规则顺序
+    # 语法规则 - 简化语法规则，删除依赖"的"字的规则
     def p_query(self, p):
         """
         query : find_calligrapher_detail
-              | find_work_with_of
-              | find_work_without_of
-              | find_representative_work
+              | find_work_representative
               | find_style
-              | find_calligrapher_style
               | find_dynasty_calligraphers
               | find_calligrapher_info
-              | find_simple_calligrapher
-              | find_work_direct
-              | find_representative_direct
+              | find_direct
+              | find_calligrapher_style
         """
         p[0] = p[1]
 
@@ -168,57 +156,9 @@ class CalligraphyDSL:
         else:
             p[0] = f"❌ 未找到书法家'{name}'的信息"
 
-    # 规则2: 书法家信息查询 - "查询张旭信息"
-    def p_find_calligrapher_info(self, p):
-        """find_calligrapher_info : FIND CHINESE_NAME INFO"""
-        name = p[2]
-        if name in self.calligraphers:
-            info = self.calligraphers[name]
-            p[0] = f"📖 {name}书法家信息：\n" \
-                   f"   朝代：{info['dynasty']}\n" \
-                   f"   擅长书体：{info['style']}\n" \
-                   f"   代表作品：{'、'.join(info['works'])}\n" \
-                   f"   简介：{info['description']}"
-        else:
-            p[0] = f"❌ 未找到书法家'{name}'的信息"
-
-    # 规则3: 简单书法家查询 - "了解欧阳询"
-    def p_find_simple_calligrapher(self, p):
-        """find_simple_calligrapher : FIND CHINESE_NAME"""
-        name = p[2]
-        if name in self.calligraphers:
-            info = self.calligraphers[name]
-            p[0] = f"📖 {name}书法家信息：\n" \
-                   f"   朝代：{info['dynasty']}\n" \
-                   f"   擅长书体：{info['style']}\n" \
-                   f"   代表作品：{'、'.join(info['works'])}\n" \
-                   f"   简介：{info['description']}"
-        else:
-            # 检查是否是作品名称
-            found = False
-            for calligrapher, info in self.calligraphers.items():
-                if name in info['works']:
-                    p[0] = f"📜 {name}是{calligrapher}的代表作\n" \
-                           f"   书体：{info['style']}\n" \
-                           f"   朝代：{info['dynasty']}\n" \
-                           f"   书法家简介：{info['description']}"
-                    found = True
-                    break
-
-            if not found:
-                # 检查是否是书体名称
-                if name in self.styles:
-                    info = self.styles[name]
-                    p[0] = f"🖋️ {name}书体信息：\n" \
-                           f"   特点：{info['description']}\n" \
-                           f"   代表书家：{'、'.join(info['masters'])}\n" \
-                           f"   艺术特征：{'、'.join(info['features'])}"
-                else:
-                    p[0] = f"❌ 未找到'{name}'的相关信息"
-
-    # 规则4: 作品查询（带"的"）- "查询王羲之的作品"
-    def p_find_work_with_of(self, p):
-        """find_work_with_of : FIND CHINESE_NAME OF WORK"""
+    # 规则2: 作品查询- "查询王羲之作品"
+    def p_find_work_representative(self, p):
+        """find_work_representative : FIND CHINESE_NAME WORK"""
         calligrapher = p[2]
         if calligrapher in self.calligraphers:
             works = self.calligraphers[calligrapher]['works']
@@ -228,33 +168,9 @@ class CalligraphyDSL:
         else:
             p[0] = f"❌ 未找到{calligrapher}的作品记录"
 
-    # 规则5: 作品查询（不带"的"）- "查询王羲之作品"
-    def p_find_work_without_of(self, p):
-        """find_work_without_of : FIND CHINESE_NAME WORK"""
-        calligrapher = p[2]
-        if calligrapher in self.calligraphers:
-            works = self.calligraphers[calligrapher]['works']
-            style = self.calligraphers[calligrapher]['style']
-            p[0] = f"🎨 {calligrapher}的代表作品（{style}）：\n" \
-                   f"   {'、'.join(works)}"
-        else:
-            p[0] = f"❌ 未找到{calligrapher}的作品记录"
-
-    # 规则6: 代表作查询 - "查找颜真卿的代表作"
-    def p_find_representative_work(self, p):
-        """find_representative_work : FIND CHINESE_NAME OF REPRESENTATIVE"""
-        calligrapher = p[2]
-        if calligrapher in self.calligraphers:
-            works = self.calligraphers[calligrapher]['works']
-            style = self.calligraphers[calligrapher]['style']
-            p[0] = f"🎨 {calligrapher}的代表作品（{style}）：\n" \
-                   f"   {'、'.join(works)}"
-        else:
-            p[0] = f"❌ 未找到{calligrapher}的代表作记录"
-
-    # 规则7: 直接作品查询 - "查询兰亭序"
-    def p_find_work_direct(self, p):
-        """find_work_direct : FIND CHINESE_NAME"""
+    # 规则3: 直接作品查询 - "查询兰亭序"
+    def p_find_direct(self, p):
+        """find_direct : FIND CHINESE_NAME"""
         work_name = p[2]
 
         # 检查是否是作品名称
@@ -280,7 +196,7 @@ class CalligraphyDSL:
             else:
                 p[0] = f"❌ 未找到'{work_name}'的相关信息"
 
-    # 规则8: 风格查询 - "查询风格行书"
+    # 规则4: 风格查询 - "查询风格行书"
     def p_find_style(self, p):
         """find_style : FIND STYLE CHINESE_NAME"""
         style = p[3]
@@ -293,9 +209,9 @@ class CalligraphyDSL:
         else:
             p[0] = f"❌ 未找到{style}书体的详细说明"
 
-    # 规则9: 书法家风格查询 - "搜索苏轼的书法风格"
+    # 规则5: 书法家风格查询 - "搜索苏轼书法风格"（无"的"字）
     def p_find_calligrapher_style(self, p):
-        """find_calligrapher_style : FIND CHINESE_NAME OF STYLE"""
+        """find_calligrapher_style : FIND CHINESE_NAME STYLE"""
         calligrapher = p[2]
         if calligrapher in self.calligraphers:
             style = self.calligraphers[calligrapher]['style']
@@ -306,7 +222,7 @@ class CalligraphyDSL:
         else:
             p[0] = f"❌ 未找到{calligrapher}的书法风格信息"
 
-    # 规则10: 朝代书法家查询 - "查询唐代书法家"
+    # 规则6: 朝代书法家查询 - "查询唐代书法家"
     def p_find_dynasty_calligraphers(self, p):
         """find_dynasty_calligraphers : FIND DYNASTY CALLIGRAPHER"""
         dynasty = p[2]
@@ -322,24 +238,26 @@ class CalligraphyDSL:
         else:
             p[0] = f"❌ 未找到{dynasty}的书法家记录"
 
-    # 规则11: 直接代表作查询 - "展示颜真卿代表作"
-    def p_find_representative_direct(self, p):
-        """find_representative_direct : FIND CHINESE_NAME REPRESENTATIVE"""
-        calligrapher = p[2]
-        if calligrapher in self.calligraphers:
-            works = self.calligraphers[calligrapher]['works']
-            style = self.calligraphers[calligrapher]['style']
-            p[0] = f"🎨 {calligrapher}的代表作品（{style}）：\n" \
-                   f"   {'、'.join(works)}"
+    # 规则7: 书法家信息查询 - "查询张旭信息"
+    def p_find_calligrapher_info(self, p):
+        """find_calligrapher_info : FIND CHINESE_NAME INFO"""
+        name = p[2]
+        if name in self.calligraphers:
+            info = self.calligraphers[name]
+            p[0] = f"📖 {name}书法家信息：\n" \
+                   f"   朝代：{info['dynasty']}\n" \
+                   f"   擅长书体：{info['style']}\n" \
+                   f"   代表作品：{'、'.join(info['works'])}\n" \
+                   f"   简介：{info['description']}"
         else:
-            p[0] = f"❌ 未找到{calligrapher}的代表作记录"
+            p[0] = f"❌ 未找到书法家'{name}'的信息"
 
     # 错误处理
     def p_error(self, p):
         if p:
             return f"语法错误 near '{p.value}'"
         else:
-            return "解析错误：查询不完整或不符合语法规则"
+            return "无法理解您的查询，请尝试重新表述"
 
     def parse(self, text):
         """解析输入文本并返回查询结果"""
@@ -359,18 +277,18 @@ def test_calligraphy_dsl():
     test_queries = [
         "查询书法家王羲之",
         "查询王羲之作品",
-        "查询王羲之的作品",
+        "查询王羲之的作品",  # "的"字将被忽略
         "查询风格行书",
         "查询唐代书法家",
-        "查找颜真卿的代表作",
-        "搜索苏轼的书法风格",
+        "查找颜真卿的代表作",  # "的"字将被忽略
+        "搜索苏轼的书法风格",  # "的"字将被忽略
         "查询张旭信息",
-        "请问柳公权的作品",
+        "请问柳公权的作品",  # "的"字将被忽略
         "了解欧阳询",
         "查询兰亭序",
-        "展示颜真卿代表作",
+        "展示颜真卿代表作",  # "的"字将被忽略
         '查询王羲之',
-        '查询张旭的代表作',
+        '查询张旭的代表作',  # "的"字将被忽略
         '查询唐代书法家',
     ]
 
@@ -391,4 +309,3 @@ def test_calligraphy_dsl():
 if __name__ == '__main__':
     # 运行测试
     test_calligraphy_dsl()
-    # 启动交互式查询

@@ -4,7 +4,7 @@ import grammar
 if __name__=='__main__':
     ds = LLM.ds()
     dsl = grammar.CalligraphyDSL()
-    print("🎨 书法专业领域咨询系统")
+    print("书法专业领域咨询系统")
     print("支持以下查询类型：")
     print("1. 查询书法家信息")
     print("2. 查询作品信息")

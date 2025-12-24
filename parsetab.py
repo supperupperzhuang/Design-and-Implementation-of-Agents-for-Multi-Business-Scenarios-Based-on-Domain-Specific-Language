@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'CALLIGRAPHER CHINESE_NAME DYNASTY FIND INFO OF REPRESENTATIVE STYLE WORK\nquery : find_calligrapher_detail\n      | find_work_with_of\n      | find_work_without_of\n      | find_representative_work\n      | find_style\n      | find_calligrapher_style\n      | find_dynasty_calligraphers\n      | find_calligrapher_info\n      | find_simple_calligrapher\n      | find_work_direct\n      | find_representative_direct\nfind_calligrapher_detail : FIND CALLIGRAPHER CHINESE_NAMEfind_calligrapher_info : FIND CHINESE_NAME INFOfind_simple_calligrapher : FIND CHINESE_NAMEfind_work_with_of : FIND CHINESE_NAME OF WORKfind_work_without_of : FIND CHINESE_NAME WORKfind_representative_work : FIND CHINESE_NAME OF REPRESENTATIVEfind_work_direct : FIND CHINESE_NAMEfind_style : FIND STYLE CHINESE_NAMEfind_calligrapher_style : FIND CHINESE_NAME OF STYLEfind_dynasty_calligraphers : FIND DYNASTY CALLIGRAPHERfind_representative_direct : FIND CHINESE_NAME REPRESENTATIVE'
+_lr_signature = 'CALLIGRAPHER CHINESE_NAME DYNASTY FIND INFO STYLE WORK\nquery : find_calligrapher_detail\n      | find_work_representative\n      | find_style\n      | find_dynasty_calligraphers\n      | find_calligrapher_info\n      | find_direct\n      | find_calligrapher_style\nfind_calligrapher_detail : FIND CALLIGRAPHER CHINESE_NAMEfind_work_representative : FIND CHINESE_NAME WORKfind_direct : FIND CHINESE_NAMEfind_style : FIND STYLE CHINESE_NAMEfind_calligrapher_style : FIND CHINESE_NAME STYLEfind_dynasty_calligraphers : FIND DYNASTY CALLIGRAPHERfind_calligrapher_info : FIND CHINESE_NAME INFO'
     
-_lr_action_items = {'FIND':([0,],[13,]),'$end':([1,2,3,4,5,6,7,8,9,10,11,12,15,18,20,21,22,23,24,25,26,27,],[0,-1,-2,-3,-4,-5,-6,-7,-8,-9,-10,-11,-14,-12,-16,-22,-13,-19,-21,-15,-17,-20,]),'CALLIGRAPHER':([13,17,],[14,24,]),'CHINESE_NAME':([13,14,16,],[15,18,23,]),'STYLE':([13,19,],[16,27,]),'DYNASTY':([13,],[17,]),'OF':([15,],[19,]),'WORK':([15,19,],[20,25,]),'INFO':([15,],[22,]),'REPRESENTATIVE':([15,19,],[21,26,]),}
+_lr_action_items = {'FIND':([0,],[9,]),'$end':([1,2,3,4,5,6,7,8,11,14,15,16,17,18,19,],[0,-1,-2,-3,-4,-5,-6,-7,-10,-8,-9,-14,-12,-11,-13,]),'CALLIGRAPHER':([9,13,],[10,19,]),'CHINESE_NAME':([9,10,12,],[11,14,18,]),'STYLE':([9,11,],[12,17,]),'DYNASTY':([9,],[13,]),'WORK':([11,],[15,]),'INFO':([11,],[16,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'query':([0,],[1,]),'find_calligrapher_detail':([0,],[2,]),'find_work_with_of':([0,],[3,]),'find_work_without_of':([0,],[4,]),'find_representative_work':([0,],[5,]),'find_style':([0,],[6,]),'find_calligrapher_style':([0,],[7,]),'find_dynasty_calligraphers':([0,],[8,]),'find_calligrapher_info':([0,],[9,]),'find_simple_calligrapher':([0,],[10,]),'find_work_direct':([0,],[11,]),'find_representative_direct':([0,],[12,]),}
+_lr_goto_items = {'query':([0,],[1,]),'find_calligrapher_detail':([0,],[2,]),'find_work_representative':([0,],[3,]),'find_style':([0,],[4,]),'find_dynasty_calligraphers':([0,],[5,]),'find_calligrapher_info':([0,],[6,]),'find_direct':([0,],[7,]),'find_calligrapher_style':([0,],[8,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,26 +27,18 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> query","S'",1,None,None,None),
-  ('query -> find_calligrapher_detail','query',1,'p_query','grammar.py',143),
-  ('query -> find_work_with_of','query',1,'p_query','grammar.py',144),
-  ('query -> find_work_without_of','query',1,'p_query','grammar.py',145),
-  ('query -> find_representative_work','query',1,'p_query','grammar.py',146),
-  ('query -> find_style','query',1,'p_query','grammar.py',147),
-  ('query -> find_calligrapher_style','query',1,'p_query','grammar.py',148),
-  ('query -> find_dynasty_calligraphers','query',1,'p_query','grammar.py',149),
-  ('query -> find_calligrapher_info','query',1,'p_query','grammar.py',150),
-  ('query -> find_simple_calligrapher','query',1,'p_query','grammar.py',151),
-  ('query -> find_work_direct','query',1,'p_query','grammar.py',152),
-  ('query -> find_representative_direct','query',1,'p_query','grammar.py',153),
-  ('find_calligrapher_detail -> FIND CALLIGRAPHER CHINESE_NAME','find_calligrapher_detail',3,'p_find_calligrapher_detail','grammar.py',159),
-  ('find_calligrapher_info -> FIND CHINESE_NAME INFO','find_calligrapher_info',3,'p_find_calligrapher_info','grammar.py',173),
-  ('find_simple_calligrapher -> FIND CHINESE_NAME','find_simple_calligrapher',2,'p_find_simple_calligrapher','grammar.py',187),
-  ('find_work_with_of -> FIND CHINESE_NAME OF WORK','find_work_with_of',4,'p_find_work_with_of','grammar.py',221),
-  ('find_work_without_of -> FIND CHINESE_NAME WORK','find_work_without_of',3,'p_find_work_without_of','grammar.py',233),
-  ('find_representative_work -> FIND CHINESE_NAME OF REPRESENTATIVE','find_representative_work',4,'p_find_representative_work','grammar.py',245),
-  ('find_work_direct -> FIND CHINESE_NAME','find_work_direct',2,'p_find_work_direct','grammar.py',257),
-  ('find_style -> FIND STYLE CHINESE_NAME','find_style',3,'p_find_style','grammar.py',285),
-  ('find_calligrapher_style -> FIND CHINESE_NAME OF STYLE','find_calligrapher_style',4,'p_find_calligrapher_style','grammar.py',298),
-  ('find_dynasty_calligraphers -> FIND DYNASTY CALLIGRAPHER','find_dynasty_calligraphers',3,'p_find_dynasty_calligraphers','grammar.py',311),
-  ('find_representative_direct -> FIND CHINESE_NAME REPRESENTATIVE','find_representative_direct',3,'p_find_representative_direct','grammar.py',327),
+  ('query -> find_calligrapher_detail','query',1,'p_query','grammar.py',135),
+  ('query -> find_work_representative','query',1,'p_query','grammar.py',136),
+  ('query -> find_style','query',1,'p_query','grammar.py',137),
+  ('query -> find_dynasty_calligraphers','query',1,'p_query','grammar.py',138),
+  ('query -> find_calligrapher_info','query',1,'p_query','grammar.py',139),
+  ('query -> find_direct','query',1,'p_query','grammar.py',140),
+  ('query -> find_calligrapher_style','query',1,'p_query','grammar.py',141),
+  ('find_calligrapher_detail -> FIND CALLIGRAPHER CHINESE_NAME','find_calligrapher_detail',3,'p_find_calligrapher_detail','grammar.py',147),
+  ('find_work_representative -> FIND CHINESE_NAME WORK','find_work_representative',3,'p_find_work_representative','grammar.py',161),
+  ('find_direct -> FIND CHINESE_NAME','find_direct',2,'p_find_direct','grammar.py',173),
+  ('find_style -> FIND STYLE CHINESE_NAME','find_style',3,'p_find_style','grammar.py',201),
+  ('find_calligrapher_style -> FIND CHINESE_NAME STYLE','find_calligrapher_style',3,'p_find_calligrapher_style','grammar.py',214),
+  ('find_dynasty_calligraphers -> FIND DYNASTY CALLIGRAPHER','find_dynasty_calligraphers',3,'p_find_dynasty_calligraphers','grammar.py',227),
+  ('find_calligrapher_info -> FIND CHINESE_NAME INFO','find_calligrapher_info',3,'p_find_calligrapher_info','grammar.py',243),
 ]

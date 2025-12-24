@@ -1,5 +1,4 @@
 #导入DeepSeek v3.2 API
-import os
 from openai import OpenAI
 class ds:
 
