@@ -6,7 +6,7 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'CALLIGRAPHER CHINESE_NAME DYNASTY FIND INFO STYLE WORK\nquery : find_calligrapher_detail\n      | find_work_representative\n      | find_style\n      | find_dynasty_calligraphers\n      | find_calligrapher_info\n      | find_direct\n      | find_calligrapher_style\nfind_calligrapher_detail : FIND CALLIGRAPHER CHINESE_NAMEfind_work_representative : FIND CHINESE_NAME WORKfind_direct : FIND CHINESE_NAMEfind_style : FIND STYLE CHINESE_NAMEfind_calligrapher_style : FIND CHINESE_NAME STYLEfind_dynasty_calligraphers : FIND DYNASTY CALLIGRAPHERfind_calligrapher_info : FIND CHINESE_NAME INFO'
+_lr_signature = 'CALLIGRAPHER CHINESE_NAME DYNASTY FIND INFO STYLE WORK\n        query : find_calligrapher_detail\n              | find_work_representative\n              | find_style\n              | find_dynasty_calligraphers\n              | find_calligrapher_info\n              | find_direct\n              | find_calligrapher_style\n        find_calligrapher_detail : FIND CALLIGRAPHER CHINESE_NAMEfind_work_representative : FIND CHINESE_NAME WORKfind_direct : FIND CHINESE_NAMEfind_style : FIND STYLE CHINESE_NAMEfind_calligrapher_style : FIND CHINESE_NAME STYLEfind_dynasty_calligraphers : FIND DYNASTY CALLIGRAPHERfind_calligrapher_info : FIND CHINESE_NAME INFO'
     
 _lr_action_items = {'FIND':([0,],[9,]),'$end':([1,2,3,4,5,6,7,8,11,14,15,16,17,18,19,],[0,-1,-2,-3,-4,-5,-6,-7,-10,-8,-9,-14,-12,-11,-13,]),'CALLIGRAPHER':([9,13,],[10,19,]),'CHINESE_NAME':([9,10,12,],[11,14,18,]),'STYLE':([9,11,],[12,17,]),'DYNASTY':([9,],[13,]),'WORK':([11,],[15,]),'INFO':([11,],[16,]),}
 
